@@ -35,5 +35,14 @@ public class Book
     {
         TotalCopies -= 1;
     }
-    
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Book book && book.BookId == BookId;
+    }
+
+    public override int GetHashCode()
+    {
+        return BookId.GetHashCode();
+    }
 }
