@@ -1,0 +1,16 @@
+@using Bookish.Models;
+@model Library;
+
+@{
+    ViewData["Title"] = "Book Catalogue";
+}
+
+<div>
+    <ul>
+        @{
+            foreach (var book in Model.Books)
+            {
+                <li>@book.Title, @book.Author, @book.AvailableCopies <a href="/Books/@book.BookId/EditBook">Edit</a></li>
+            }
+        }
+    </ul>
