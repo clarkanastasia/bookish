@@ -4,7 +4,7 @@ public class Library
 {
     public readonly HashSet<Book> Books = [];
     public readonly HashSet<Member> Members = [];
-    public readonly HashSet<BookMember> BooksOnLoan = [];
+    public readonly HashSet<Loan> BooksOnLoan = [];
 
     public Book GetBookById(int bookId)
     {
@@ -41,7 +41,7 @@ public class Library
     public void BorrowBook(int bookId, int memberId)
     {
         Book book = GetBookById(bookId);        
-        BookMember bookOnLoan = new(){
+        Loan bookOnLoan = new(){
             BookId = bookId,
             MemberId = memberId,
             IssueDate = DateTime.Now,
@@ -53,7 +53,7 @@ public class Library
     public void ReturnBook(int bookId, int memberId)
     {
         Book book = GetBookById(bookId);        
-        BookMember bookOnLoan = BooksOnLoan.First(bl => bl.BookId == bookId && bl.MemberId == memberId);
+        Loan bookOnLoan = BooksOnLoan.First(bl => bl.BookId == bookId && bl.MemberId == memberId);
         if(bookOnLoan != null)
         {
             book.CheckIn();
