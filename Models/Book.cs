@@ -26,6 +26,14 @@ public class Book
         AvailableCopies += 1;
     }
 
+    public void IncreaseTotalCopies()
+    {
+        TotalCopies += 1;
+    }
 
+    public void DecreaseTotalCopies()
+    {
+        TotalCopies -= 1;
+    }
     
 }
