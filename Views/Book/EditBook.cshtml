@@ -1,0 +1,35 @@
+@using Bookish.Models;
+@model Book;
+
+<form method="post" action="/Books/@Model.BookId/Edit">
+            <label>Book Title:
+            <input 
+            type="text" 
+            name="title" 
+            value="@Model.Title"
+            />
+            </label>
+            <label>Book Author:
+            <input 
+                type="text" 
+                name="author" 
+                value="@Model.Author"
+            />
+            </label>
+            <label>Total number of copies:
+            <input 
+                type="text" 
+                name="totalCopies"
+                value="@Model.TotalCopies" 
+            />
+            </label>
+            <label>Number of available copies:
+            <input 
+                type="text" 
+                name="availableCopies"
+                value="@Model.AvailableCopies" 
+                readonly
+            />
+            </label>
+        <button type="submit">Update Book Info</button>
+</form>

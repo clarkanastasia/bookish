@@ -1,22 +1,48 @@
 namespace Bookish.Models;
 
+
 public class Book
 {
-    public int Id {get; set;}
-    public string Name {get; set;}= "";
-    public string Title {get; set;} = "";
-    public int TotalCopies {get; set;}
-    public int AvailableCopies {get; set;}
+    public required int BookId {get; set;}
+    public required string Title {get; set;}
+    public required string Author {get; set;}
+    public required int TotalCopies {get; set;}
+    public required int AvailableCopies {get; set;}
 
-    public void Checkout()
+    public bool Checkout()
     {
-        if (AvailableCopies > 0)
-        {
+        bool success = false;
+
+        if(AvailableCopies>0)
+        {    
             AvailableCopies -= 1;
+            success = true;
         }
+        return success;
     }
+
     public void CheckIn()
     {
         AvailableCopies += 1;
+    }
+
+    public void IncreaseTotalCopies()
+    {
+        TotalCopies += 1;
+    }
+
+    public void DecreaseTotalCopies()
+    {
+        TotalCopies -= 1;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Book book && book.BookId == BookId;
+    }
+
+    public override int GetHashCode()
+    {
+        return BookId.GetHashCode();
     }
 }
