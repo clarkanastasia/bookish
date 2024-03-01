@@ -5,12 +5,6 @@ namespace Bookish.Controllers;
 public class MembersController : Controller 
 {    
     private readonly Library myLibrary;
-
-    Member member1 = new Member{
-        MemberId = 1,
-        Name = "Jane Smith",
-        MembershipNo = "123456"
-    };
     
     public MembersController(Library library)
     {
@@ -20,7 +14,6 @@ public class MembersController : Controller
     [HttpGet("[controller]/all")]
     public IActionResult ListAll()
     {
-        myLibrary.AddMember(member1);
         return View("~/Views/Member/MembersList.cshtml", myLibrary);
     }
 
