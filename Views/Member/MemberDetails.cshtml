@@ -1,0 +1,14 @@
+@using Bookish.Models;
+@model Member;
+
+@{
+    ViewData["Title"] = "Member @Model.Name";
+}
+
+<div>
+    <ul>
+        <li>@Model.MemberId</li>
+        <li>@Model.Name</li>
+        <li>@Model.MembershipNo</li>
+    </ul>
+</div>
