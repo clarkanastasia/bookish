@@ -6,21 +6,6 @@ public class BooksController : Controller
 {    
     private readonly Library myLibrary;
 
-    Book book1 = new Book{
-        BookId = 1,
-        Title = "Harry Potter and The Goblet of Fire",
-        Author = "J.K.Rowling",
-        TotalCopies = 5,
-        AvailableCopies = 5,
-    };
-    Book book2 = new Book{
-        BookId = 2,
-        Title = "Little Women",
-        Author = "Louisa May Alcott",
-        TotalCopies = 6,
-        AvailableCopies = 6,
-    };
-
     public BooksController(Library library)
     {
         myLibrary = library;
@@ -29,8 +14,6 @@ public class BooksController : Controller
     [HttpGet("[controller]/catalogue")]
     public IActionResult ListAll()
     {
-        myLibrary.AddBook(book1);
-        myLibrary.AddBook(book2);
         return View("~/Views/Book/Catalogue.cshtml", myLibrary);
     }
 
@@ -59,7 +42,7 @@ public class BooksController : Controller
             AvailableCopies = totalCopies,
         };
         myLibrary.AddBook(newBook);
-        return Redirect("catalogue");
+        return Redirect(nameof(ListAll));
     }
 
     [HttpGet("[controller]/{id}/EditBook")]
@@ -76,6 +59,6 @@ public class BooksController : Controller
         existingBook.Title = title;
         existingBook.Author = author;
         existingBook.TotalCopies = totalCopies;
-        return Redirect("/");
+        return Redirect(nameof(ListAll));
     }
 }

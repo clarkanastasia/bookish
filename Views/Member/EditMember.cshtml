@@ -1,0 +1,21 @@
+@using Bookish.Models;
+@model Member;
+
+<form method="post" action="/Members/@Model.MemberId/Edit">
+            <label>Member Name:
+            <input 
+            type="text" 
+            name="name" 
+            value="@Model.Name"
+            />
+            </label>
+            <label>Membership Number:
+            <input 
+                type="text" 
+                name="membershipNo" 
+                value="@Model.MembershipNo"
+            />
+            </label>
+            
+        <button type="submit">Update Member Info</button>
+</form>

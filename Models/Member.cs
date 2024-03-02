@@ -6,18 +6,13 @@ public class Member
     public required string Name {get; set;}
     public required string MembershipNo {get; set;}
 
-    // public readonly HashSet<Book> BooksOnLoan = [];
-    // public void BorrowBook(Book book)
-    // {
-    //     if(book.Checkout())
-    //         BooksOnLoan.Add(book);
-    // }
-    // public void ReturnBook(Book book)
-    // {
-    //     if(BooksOnLoan.Any(b => b.BookId == book.BookId))
-    //     {
-    //         book.CheckIn();
-    //         BooksOnLoan.Remove(book);
-    //     }
-    // }
+    public override bool Equals(object? obj)
+    {
+        return obj is Member member && member.MemberId == MemberId;
+    }
+    
+    public override int GetHashCode()
+    {
+        return MemberId.GetHashCode();
+    }
 }
