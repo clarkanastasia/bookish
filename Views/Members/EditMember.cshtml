@@ -1,0 +1,25 @@
+@using Bookish.Models.Data;
+@model Member;
+
+@{
+    ViewData["Title"] = "Member Details";
+}
+
+<form method="post" action="/Members/@Model.MemberId/EditMember">
+            <label>Member Name:
+            <input 
+            type="text" 
+            name="name" 
+            value="@Model.Name"
+            />
+            </label>
+            <label>Membership Number:
+            <input 
+                type="text" 
+                name="membershipNo" 
+                value="@Model.MembershipNo"
+            />
+            </label>
+            
+        <button type="submit">Update Member Info</button>
+</form>

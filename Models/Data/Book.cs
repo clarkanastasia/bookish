@@ -1,9 +1,8 @@
-namespace Bookish.Models;
-
+namespace Bookish.Models.Data;
 
 public class Book
 {
-    public required int BookId {get; set;}
+    public int BookId {get; set;}
     public required string Title {get; set;}
     public required string Author {get; set;}
     public required int TotalCopies {get; set;}
@@ -24,25 +23,5 @@ public class Book
     public void CheckIn()
     {
         AvailableCopies += 1;
-    }
-
-    public void IncreaseTotalCopies()
-    {
-        TotalCopies += 1;
-    }
-
-    public void DecreaseTotalCopies()
-    {
-        TotalCopies -= 1;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is Book book && book.BookId == BookId;
-    }
-
-    public override int GetHashCode()
-    {
-        return BookId.GetHashCode();
     }
 }

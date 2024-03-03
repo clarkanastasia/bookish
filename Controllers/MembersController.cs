@@ -1,4 +1,5 @@
-using Bookish.Models;
+using Bookish.Models.Data;
+using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookish.Controllers;
@@ -12,50 +13,67 @@ public class MembersController : Controller
     }
 
     [HttpGet("[controller]/all")]
-    public IActionResult ListAll()
+    public IActionResult GetAll()
     {
-        return View("~/Views/Member/MembersList.cshtml", myLibrary);
+        var members = myLibrary.Members.ToList();
+        var viewModel = new MembersViewModel
+        {
+            Members = members,
+        };
+        return View(viewModel);
     }
 
     [HttpGet("[controller]/{memberId}")]
     public IActionResult GetById([FromRoute]int memberId)
     {
-        var member = myLibrary.GetMemberById(memberId);
-
-        return View("~/Views/Member/MemberDetails.cshtml", member);
+        var member = myLibrary.Members.FirstOrDefault(member => member.MemberId == memberId);
+        if (member == null)
+        {
+            return NotFound();
+        }
+        return View(member);
     }
-
     [HttpGet("[controller]/AddMember")]
-    public IActionResult AddMemberForm()
+    public IActionResult AddMember()
     {
-        return View("~/Views/Member/AddMember.cshtml");
+        return View();
     }
 
-    [HttpPost("[controller]/Add")]
+    [HttpPost]
     public IActionResult AddMember([FromForm] string name, [FromForm] string membershipNo)
     {
         var newMember = new Member{
-            MemberId = myLibrary.Members.Count + 1,
             Name = name, 
             MembershipNo = membershipNo,
         };
-        myLibrary.AddMember(newMember);
-        return Redirect("all");
+        myLibrary.Members.Add(newMember);
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
     }
 
     [HttpGet("[controller]/{id}/EditMember")]
-    public IActionResult EditMemberForm([FromRoute] int id)
+    public IActionResult EditMember([FromRoute] int id)
     {
-        var existingMember = myLibrary.GetMemberById(id);
-        return View("~/Views/Member/EditMember.cshtml", existingMember);
+        var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == id);
+        return View(existingMember);
     }
 
-    [HttpPost("[controller]/{id}/Edit")]
-    public IActionResult EditBook([FromRoute] int id, [FromForm] string name, [FromForm] string membershipNo)
+    [HttpPost("[controller]/{id}/EditMember")]
+    public IActionResult EditMember([FromRoute] int id, [FromForm] string name, [FromForm] string membershipNo)
     {
-        var existingMember = myLibrary.GetMemberById(id);
+        var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == id);
         existingMember.Name = name;
         existingMember.MembershipNo = membershipNo;
-        return Redirect("/");
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
+    }
+
+    [HttpGet("[controller]/{memberId}/RemoveMember")]
+    public IActionResult RemoveMember([FromRoute] int memberId)
+    {
+        var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == memberId);
+        myLibrary.Members.Remove(existingMember);
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
     }
 }

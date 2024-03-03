@@ -1,4 +1,4 @@
-using Bookish.Models;
+using Bookish;
 
 var builder = WebApplication.CreateBuilder(args);
 

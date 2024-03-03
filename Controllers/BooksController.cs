@@ -1,4 +1,6 @@
-using Bookish.Models;
+using System.Linq.Expressions;
+using Bookish.Models.Data;
+using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookish.Controllers;
@@ -12,53 +14,102 @@ public class BooksController : Controller
     }
 
     [HttpGet("[controller]/catalogue")]
-    public IActionResult ListAll()
+    public IActionResult GetAll()
     {
-        return View("~/Views/Book/Catalogue.cshtml", myLibrary);
+        var books = myLibrary.Books.ToList();
+        var viewModel = new BooksViewModel
+        {
+            Books = books,
+        };
+        return View(viewModel);
     }
 
     [HttpGet("[controller]/catalogue/{bookId}")]
-    public IActionResult List([FromRoute]int bookId)
+    public IActionResult GetById([FromRoute]int bookId)
     {
-        var book = myLibrary.GetBookById(bookId);
-
-        return View("~/Views/Book/BookDetails.cshtml", book);
+        var book = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+        if (book == null)
+        {
+            return NotFound();
+        }
+        return View(book);
     }
 
-    [HttpGet("[controller]/AddBook")]
-    public IActionResult AddBookForm()
+    public IActionResult AddBook()
     {
-        return View("~/Views/Book/AddBook.cshtml");
+        return View();
     }
 
-    [HttpPost("[controller]/Add")]
-    public IActionResult AddBook([FromForm] string title, [FromForm] string author, [FromForm] int totalCopies)
+    [HttpPost]
+    public IActionResult AddBook([FromForm] string title, [FromForm] string author, [FromForm] int totalCopies) 
     {
-        var newBook = new Book{
-            BookId = myLibrary.Books.Count + 1,
-            Title = title, 
+        var newBook = new Book
+        {
+            Title = title,
             Author = author,
             TotalCopies = totalCopies,
             AvailableCopies = totalCopies,
+
         };
-        myLibrary.AddBook(newBook);
-        return Redirect(nameof(ListAll));
+        myLibrary.Books.Add(newBook);
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
     }
 
-    [HttpGet("[controller]/{id}/EditBook")]
-    public IActionResult EditBookForm([FromRoute] int id)
+    [HttpGet("[controller]/{bookId}/EditBook")]
+    public IActionResult EditBook([FromRoute] int bookId)
     {
-        var existingBook = myLibrary.GetBookById(id);
-        return View("~/Views/Book/EditBook.cshtml", existingBook);
+        var existingBook = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+        return View(existingBook);
     }
 
-    [HttpPost("[controller]/{id}/Edit")]
-    public IActionResult EditBook([FromRoute] int id, [FromForm] string title, [FromForm] string author, [FromForm] int totalCopies)
+    [HttpPost("[controller]/{bookId}/EditBook")]
+    public IActionResult EditBook([FromRoute] int bookId, [FromForm] string title, [FromForm] string author)
     {
-        var existingBook = myLibrary.GetBookById(id);
+        var existingBook = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
         existingBook.Title = title;
         existingBook.Author = author;
-        existingBook.TotalCopies = totalCopies;
-        return Redirect(nameof(ListAll));
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
     }
+    
+    [HttpGet("[controller]/{bookId}/RemoveBook")]
+    public IActionResult RemoveBook([FromRoute] int bookId)
+    {
+        var existingBook = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+        myLibrary.Books.Remove(existingBook);
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(GetAll));
+    }
+
+    public IActionResult AllLoans()
+    {
+        var loans = myLibrary.BooksOnLoan.ToList();
+        var viewModel = new LoansViewModel
+        {
+            Loans = loans,
+        };
+        return View(viewModel);
+    }
+
+    // [HttpPost("[controller]/{bookId}/Borrow")]
+    // public IActionResult BorrowBook([FromRoute] int bookId,[FromForm] int memberId)
+    // {
+    //     var book = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+    //     var member = myLibrary.Members.SingleOrDefault(member => member.MemberId == memberId);
+    //         var newLoan = new Loan
+    //         {
+    //             BookId = bookId,
+    //             MemberId = memberId,
+    //         };
+    //         book.AvailableCopies -= 1;
+    //         myLibrary.BooksOnLoan.Add(newLoan);
+    //     myLibrary.SaveChanges();
+    //     return RedirectToAction(nameof(AllLoans));
+    // }
+//     [HttpGet("[controller]/{bookId}/Return")]
+//     public IActionResult ReturnBook([FromRoute] in bookId)
+//     {
+// }
+
 }
