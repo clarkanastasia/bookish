@@ -62,6 +62,9 @@ public class MembersController : Controller
     public IActionResult EditMember([FromRoute] int id, [FromForm] string name, [FromForm] string membershipNo)
     {
         var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == id);
+        if (existingMember == null){
+            return NotFound();
+        }
         existingMember.Name = name;
         existingMember.MembershipNo = membershipNo;
         myLibrary.SaveChanges();
@@ -72,6 +75,9 @@ public class MembersController : Controller
     public IActionResult RemoveMember([FromRoute] int memberId)
     {
         var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == memberId);
+        if (existingMember == null){
+            return NotFound();
+        }
         myLibrary.Members.Remove(existingMember);
         myLibrary.SaveChanges();
         return RedirectToAction(nameof(GetAll));

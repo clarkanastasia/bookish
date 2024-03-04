@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Bookish.Models.Data;
 using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +66,9 @@ public class BooksController : Controller
     public IActionResult EditBook([FromRoute] int bookId, [FromForm] string title, [FromForm] string author)
     {
         var existingBook = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+        if (existingBook == null){
+            return NotFound();
+        }
         existingBook.Title = title;
         existingBook.Author = author;
         myLibrary.SaveChanges();
@@ -77,6 +79,9 @@ public class BooksController : Controller
     public IActionResult RemoveBook([FromRoute] int bookId)
     {
         var existingBook = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+        if (existingBook == null){
+            return NotFound();
+        }
         myLibrary.Books.Remove(existingBook);
         myLibrary.SaveChanges();
         return RedirectToAction(nameof(GetAll));
