@@ -47,6 +47,24 @@ namespace Bookish.Migrations
                     b.HasKey("BookId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = -1,
+                            Author = "J.K.Rowling",
+                            AvailableCopies = 5,
+                            Title = "Harry Potter and The Goblet of Fire",
+                            TotalCopies = 5
+                        },
+                        new
+                        {
+                            BookId = -2,
+                            Author = "Louisa May Alcott",
+                            AvailableCopies = 6,
+                            Title = "Little Women",
+                            TotalCopies = 6
+                        });
                 });
 
             modelBuilder.Entity("Bookish.Models.Data.Loan", b =>
@@ -79,6 +97,16 @@ namespace Bookish.Migrations
                     b.HasIndex("MemberId");
 
                     b.ToTable("BooksOnLoan");
+
+                    b.HasData(
+                        new
+                        {
+                            LoanId = -1,
+                            BookId = -1,
+                            DueDate = new DateOnly(2024, 4, 3),
+                            IssueDate = new DateOnly(2024, 3, 4),
+                            MemberId = -1
+                        });
                 });
 
             modelBuilder.Entity("Bookish.Models.Data.Member", b =>
@@ -100,6 +128,14 @@ namespace Bookish.Migrations
                     b.HasKey("MemberId");
 
                     b.ToTable("Members");
+
+                    b.HasData(
+                        new
+                        {
+                            MemberId = -1,
+                            MembershipNo = "123456",
+                            Name = "Jane Smith"
+                        });
                 });
 
             modelBuilder.Entity("Bookish.Models.Data.Loan", b =>
