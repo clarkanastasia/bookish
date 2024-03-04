@@ -97,24 +97,35 @@ public class BooksController : Controller
         return View(viewModel);
     }
 
-    // [HttpPost("[controller]/{bookId}/Borrow")]
-    // public IActionResult BorrowBook([FromRoute] int bookId,[FromForm] int memberId)
-    // {
-    //     var book = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
-    //     var member = myLibrary.Members.SingleOrDefault(member => member.MemberId == memberId);
-    //         var newLoan = new Loan
-    //         {
-    //             BookId = bookId,
-    //             MemberId = memberId,
-    //         };
-    //         book.AvailableCopies -= 1;
-    //         myLibrary.BooksOnLoan.Add(newLoan);
-    //     myLibrary.SaveChanges();
-    //     return RedirectToAction(nameof(AllLoans));
-    // }
-//     [HttpGet("[controller]/{bookId}/Return")]
-//     public IActionResult ReturnBook([FromRoute] in bookId)
-//     {
-// }
-
+    [HttpPost("[controller]/{bookId}/Borrow")]
+    public IActionResult BorrowBook([FromRoute] int bookId,[FromForm] int memberId)
+    {
+        var book = myLibrary.Books.SingleOrDefault(book => book.BookId == bookId);
+            var newLoan = new Loan
+            {
+                BookId = bookId,
+                MemberId = memberId,
+            };
+            if (book == null){
+                return NotFound();
+            }
+            book.AvailableCopies -= 1;
+            myLibrary.BooksOnLoan.Add(newLoan);
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(AllLoans));
+    }
+    [HttpGet("[controller]/{loanId}/Return")]
+    public IActionResult ReturnBook([FromRoute] int loanId)
+    {
+        var loan = myLibrary.BooksOnLoan.SingleOrDefault(loan => loan.LoanId == loanId);
+        if (loan ==null)
+        {
+            return NotFound();
+        }
+        var book = loan.Book;
+        myLibrary.BooksOnLoan.Remove(loan);
+        book.AvailableCopies += 1;
+        myLibrary.SaveChanges();
+        return RedirectToAction(nameof(AllLoans));
+    }
 }
