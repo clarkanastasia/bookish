@@ -1,6 +1,11 @@
 @using Bookish.Models;
 @model Book;
 
+
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
 <form method="post" action="/Books/@Model.BookId/Edit">
             <label>Book Title:
             <input 
@@ -19,8 +24,10 @@
             <label>Total number of copies:
             <input 
                 type="text" 
+                id="totalCopies"
                 name="totalCopies"
                 value="@Model.TotalCopies" 
+                onfocusout="myFunction(@Model.TotalCopies, @Model.AvailableCopies)"
             />
             </label>
             <label>Number of available copies:
@@ -31,5 +38,21 @@
                 readonly
             />
             </label>
-        <button type="submit">Update Book Info</button>
+        <button id="submitButton" type="submit" disabled>Update Book Info</button>
 </form>
+<script>
+
+function myFunction(totalCopies, availableCopies) {
+    var inputTotalCopies = document.getElementById("totalCopies").value;
+    var currentLoans = totalCopies-availableCopies;
+    
+    if(inputTotalCopies<currentLoans)
+    {
+        alert("Total Copies can't be less than " + currentLoans + "  for this book.")
+    }
+    else{
+        var button = document.getElementById("submitButton");
+        button.disabled = false;
+    }
+}
+</script>

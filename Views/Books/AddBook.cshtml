@@ -1,4 +1,9 @@
-<form method="post" action="/Books/Add">
+
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<form method="post" action="/Books/AddBook">
             <label>Book Title:
             <input 
             type="text" 
@@ -17,5 +22,5 @@
                 name="totalCopies" 
             />
             </label>
-        <button type="submit">Creat Book</button>
+        <button type="submit">Create Book</button>
 </form>

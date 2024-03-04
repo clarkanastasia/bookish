@@ -1,23 +1,12 @@
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Bookish.Models;
 
 public class Member
 {
-    public required int MemberId {get; set;}
+    public int MemberId {get; set;}
     public required string Name {get; set;}
     public required string MembershipNo {get; set;}
-
-    // public readonly HashSet<Book> BooksOnLoan = [];
-    // public void BorrowBook(Book book)
-    // {
-    //     if(book.Checkout())
-    //         BooksOnLoan.Add(book);
-    // }
-    // public void ReturnBook(Book book)
-    // {
-    //     if(BooksOnLoan.Any(b => b.BookId == book.BookId))
-    //     {
-    //         book.CheckIn();
-    //         BooksOnLoan.Remove(book);
-    //     }
-    // }
+    
+    [InverseProperty(nameof(Loan.Member))]
+    public List<Loan> Loans { get; set; } = [];
 }

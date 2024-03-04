@@ -1,17 +1,20 @@
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Bookish.Models;
 
 public class Loan
 {
+    public int LoanId {get;set;}
     public required int BookId {get;set;}
+    [ForeignKey("BookId")]
+    public Book Book {get;set;} = null!;
     public required int MemberId {get;set;}
-    public required DateTime IssueDate {get;set;}
+    [ForeignKey("MemberId")]
+    public Member Member {get;set;} = null!;
+    private readonly static int _loanPeriod = 30;
 
-    private readonly double _loadPeriod = 30;
+    public DateOnly IssueDate {get;set; } = DateOnly.FromDateTime(DateTime.Today);
+    
+    public DateOnly DueDate {get; set;} = DateOnly.FromDateTime(DateTime.Today).AddDays(_loanPeriod);
 
-    public DateTime GetDueDate()
-    {
-        DateTime dueDate;
-        dueDate = IssueDate.AddDays(_loadPeriod);
-        return dueDate;
-    }    
+    public DateOnly? DateReturned {get; set;}
 }

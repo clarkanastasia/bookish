@@ -1,0 +1,25 @@
+@using Bookish.Models;
+@model LoansView;
+
+@{
+    ViewData["Title"] = "All Loans";
+}
+
+<div>
+    <ul>
+        @{
+            foreach (var loan in Model.Loans)
+            {
+                <li>Borrower Name: @loan.Member.Name</li>
+                <li>Book: @loan.Book.Title by @loan.Book.Author </li>
+                <li>Issue Date: @loan.IssueDate</li>
+                <li>Due Date : @loan.DueDate </li>
+                if (@loan.DateReturned == null){
+                    <li>Not yet returned</li>
+                    <a href="/Books/@loan.LoanId/Return">Return</a>
+                } else{
+                <li>Date Returned: @loan.DateReturned </li>
+                }
+            }
+        }
+    </ul>

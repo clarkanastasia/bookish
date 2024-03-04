@@ -1,25 +1,11 @@
 using Bookish.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 public class BooksController : Controller 
 {    
     private readonly Library myLibrary;
-
-    Book book1 = new Book{
-        BookId = 1,
-        Title = "Harry Potter and The Goblet of Fire",
-        Author = "J.K.Rowling",
-        TotalCopies = 5,
-        AvailableCopies = 5,
-    };
-    Book book2 = new Book{
-        BookId = 2,
-        Title = "Little Women",
-        Author = "Louisa May Alcott",
-        TotalCopies = 6,
-        AvailableCopies = 6,
-    };
 
     public BooksController(Library library)
     {
@@ -29,53 +15,144 @@ public class BooksController : Controller
     [HttpGet("[controller]/catalogue")]
     public IActionResult ListAll()
     {
-        myLibrary.AddBook(book1);
-        myLibrary.AddBook(book2);
-        return View("~/Views/Book/Catalogue.cshtml", myLibrary);
+        var books = myLibrary.Books.ToList();
+        
+        var viewModel = new BooksView
+        {
+            Books = books,
+        };
+        return View(viewModel);
     }
 
     [HttpGet("[controller]/catalogue/{bookId}")]
     public IActionResult List([FromRoute]int bookId)
     {
-        var book = myLibrary.GetBookById(bookId);
-
-        return View("~/Views/Book/BookDetails.cshtml", book);
+        var book = myLibrary.Books.FirstOrDefault(book => book.BookId == bookId);
+        if (book == null)
+        {
+            return NotFound();
+        }
+        return View(book);
     }
-
     [HttpGet("[controller]/AddBook")]
-    public IActionResult AddBookForm()
+    public IActionResult AddBook()
     {
-        return View("~/Views/Book/AddBook.cshtml");
+        return View();
     }
 
-    [HttpPost("[controller]/Add")]
+    [HttpPost]
     public IActionResult AddBook([FromForm] string title, [FromForm] string author, [FromForm] int totalCopies)
     {
-        var newBook = new Book{
-            BookId = myLibrary.Books.Count + 1,
+        var newBook = new Book
+        {
             Title = title, 
             Author = author,
             TotalCopies = totalCopies,
             AvailableCopies = totalCopies,
         };
-        myLibrary.AddBook(newBook);
-        return Redirect("catalogue");
+        myLibrary.Books.Add(newBook);
+        myLibrary.SaveChanges();
+        return RedirectToAction("ListAll");
     }
 
     [HttpGet("[controller]/{id}/EditBook")]
-    public IActionResult EditBookForm([FromRoute] int id)
+    public IActionResult EditBook([FromRoute] int id)
     {
-        var existingBook = myLibrary.GetBookById(id);
-        return View("~/Views/Book/EditBook.cshtml", existingBook);
+        var existingBook = myLibrary.Books.FirstOrDefault(book => book.BookId == id);
+        if (existingBook == null)
+        {
+            return NotFound();
+        }
+        return View(existingBook);
     }
 
     [HttpPost("[controller]/{id}/Edit")]
     public IActionResult EditBook([FromRoute] int id, [FromForm] string title, [FromForm] string author, [FromForm] int totalCopies)
     {
-        var existingBook = myLibrary.GetBookById(id);
+        var existingBook = myLibrary.Books.FirstOrDefault(book => book.BookId == id);
+        if(existingBook == null)
+        {
+            return NotFound();
+        }
+        var currentLoans = existingBook.TotalCopies-existingBook.AvailableCopies;
+        int oldTotalCopies = existingBook.TotalCopies;
+        if (existingBook == null)
+        {
+            return NotFound();
+        }
+        if(totalCopies<currentLoans)
+        {
+            existingBook.TotalCopies = currentLoans;
+            existingBook.AvailableCopies = 0;
+        } 
+        else
+        {
+            existingBook.TotalCopies = totalCopies;
+            existingBook.AvailableCopies = totalCopies - currentLoans;
+        }
+        
         existingBook.Title = title;
         existingBook.Author = author;
-        existingBook.TotalCopies = totalCopies;
-        return Redirect("/");
+        myLibrary.SaveChanges();
+        return RedirectToAction("ListAll");
+    }
+
+    [HttpGet("[controller]/{bookId}/DeleteBook")]
+    public IActionResult DeleteBook([FromRoute] int bookId)
+    {
+        var existingBook = myLibrary.Books.FirstOrDefault(book => book.BookId == bookId);
+        if (existingBook == null)
+        {
+            return NotFound();
+        }
+        myLibrary.Books.Remove(existingBook);
+        myLibrary.SaveChanges();
+        return RedirectToAction("ListAll");
+    }
+    public IActionResult AllLoans()
+    {
+        var loans = myLibrary.BooksOnLoan.Include(loan => loan.Book)
+                    .Include(loan => loan.Member)
+                    .ThenInclude(member => member.Loans)
+                    .ToList();
+        
+        var viewModel = new LoansView
+        {
+            Loans = loans,        
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost("[controller]/{bookId}/Borrow")]
+    public IActionResult BorrowBook([FromRoute] int bookId, [FromForm] int memberId)    
+    {
+        var existingBook = myLibrary.Books.FirstOrDefault(book => book.BookId == bookId);
+        var newLoan = new Loan()
+        {
+            BookId = bookId,
+            MemberId = memberId,
+        };
+        if (existingBook == null)
+        {
+            return NotFound();
+        }
+        existingBook.AvailableCopies -=1;
+        myLibrary.BooksOnLoan.Add(newLoan);
+        myLibrary.SaveChanges();
+        return RedirectToAction("AllLoans");
+    }
+    
+    [HttpGet("[controller]/{loanId}/Return")]
+    public IActionResult ReturnBook([FromRoute] int loanId)    
+    {
+        var existingLoan = myLibrary.BooksOnLoan.FirstOrDefault(loan => loan.LoanId == loanId);
+        if (existingLoan == null)
+        {
+            return NotFound();
+        }
+        existingLoan.Book.AvailableCopies += 1;
+        existingLoan.DateReturned = DateOnly.FromDateTime(DateTime.Today);
+        myLibrary.SaveChanges();
+        return RedirectToAction("AllLoans");
     }
 }

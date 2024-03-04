@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "AddMember";
+}
+
+<form method="post" action="/Members/AddMember">
+            <label>Member name:
+            <input 
+            type="text" 
+            name="name" 
+            />
+            </label>
+            <label>Membership Number:
+            <input 
+                type="text" 
+                name="membershipNo" 
+            />
+            </label>
+        <button type="submit">Create Member</button>
+</form>
