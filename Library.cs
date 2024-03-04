@@ -52,25 +52,4 @@ public class Library : DbContext
     //     modelBuilder.Entity<Loan>().HasData(loan1);
     // } 
 
-    // public void BorrowBook(int bookId, int memberId)
-    // {
-    //     Book book = GetBookById(bookId);        
-    //     Loan bookOnLoan = new(){
-    //         BookId = bookId,
-    //         MemberId = memberId,
-    //     };
-        
-    //     if(book.Checkout())
-    //         BooksOnLoan.Add(bookOnLoan);
-    // }
-    // public void ReturnBook(int bookId, int memberId)
-    // {
-    //     Book book = GetBookById(bookId);        
-    //     Loan bookOnLoan = BooksOnLoan.First(bl => bl.BookId == bookId && bl.MemberId == memberId);
-    //     if(bookOnLoan != null)
-    //     {
-    //         book.CheckIn();
-    //         BooksOnLoan.Remove(bookOnLoan);
-    //     }
-    // }
 }
