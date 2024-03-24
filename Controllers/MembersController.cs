@@ -1,6 +1,7 @@
 using Bookish.Models.Data;
 using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 public class MembersController : Controller 
@@ -55,6 +56,10 @@ public class MembersController : Controller
     public IActionResult EditMember([FromRoute] int id)
     {
         var existingMember = myLibrary.Members.FirstOrDefault(member => member.MemberId == id);
+        if (existingMember == null)
+        {
+            return NotFound();
+        }
         return View(existingMember);
     }
 

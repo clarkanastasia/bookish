@@ -1,6 +1,10 @@
 @using Bookish.Models.Data;
 @model Book;
 
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
 <form method="post" action="/Books/@Model.BookId/EditBook">
             <label>Book Title:
             <input 
@@ -23,7 +27,7 @@
                 type="text" 
                 name="totalCopies"
                 value="@Model.TotalCopies"
-                readonly
+                required
             />
             </label>
             <label>Number of available copies:

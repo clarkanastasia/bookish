@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookish.Migrations
 {
     [DbContext(typeof(Library))]
-    [Migration("20240324125616_ChangeAvailableCopies")]
-    partial class ChangeAvailableCopies
+    [Migration("20240324222913_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,7 +150,7 @@ namespace Bookish.Migrations
                         .IsRequired();
 
                     b.HasOne("Bookish.Models.Data.Member", "Member")
-                        .WithMany()
+                        .WithMany("Loans")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -158,6 +158,11 @@ namespace Bookish.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("Bookish.Models.Data.Member", b =>
+                {
+                    b.Navigation("Loans");
                 });
 #pragma warning restore 612, 618
         }
