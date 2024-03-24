@@ -22,7 +22,7 @@ public class Library : DbContext
             Title = "Harry Potter and The Goblet of Fire",
             Author = "J.K.Rowling",
             TotalCopies = 5,
-            AvailableCopies = 5,
+            AvailableCopies = 4,
         };
         var book2 = new Book
         {
