@@ -2,6 +2,7 @@ using Bookish.Models.Data;
 using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 public class BooksController : Controller 
@@ -37,6 +38,7 @@ public class BooksController : Controller
 
     public IActionResult AddBook()
     {
+        return View();
         return View();
     }
 

@@ -1,0 +1,20 @@
+@using Bookish.Models;
+@model MembersView;
+
+@{
+    ViewData["Title"] = "All Members";
+}
+
+<div>
+    <ul>
+        @{
+            foreach (var member in Model.Members)
+            {
+                <li>Name: @member.Name, Membership #: @member.MembershipNo
+                <a href="/Members/@member.MemberId">View</a> 
+                <a href="/Members/@member.MemberId/EditMember">Edit</a>
+                <a href="/Members/@member.MemberId/DeleteMember">Delete</a>
+                </li>
+            }
+        }
+    </ul>

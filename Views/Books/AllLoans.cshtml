@@ -16,7 +16,12 @@
                 <li>Book Title: @loan.Book.Author</li>
                 <li>Issue Date: @loan.IssueDate</li>
                 <li>Due Date: @loan.DueDate</li>
-                <a href="/Books/@loan.LoanId/Return">Return Book</a>
+                if (@loan.DateReturned == null){
+                    <li>Not yet returned</li>
+                    <a href="/Books/@loan.LoanId/Return">Return</a>
+                } else{
+                <li>Date Returned: @loan.DateReturned </li>
+                }
             }
         }
     </ul>
