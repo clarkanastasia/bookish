@@ -10,7 +10,7 @@
         @{
             foreach (var member in Model.Members)
             {
-                <li>@member.Name, @member.MembershipNo 
+                <li>Name: @member.Name, Membership Number: @member.MembershipNo 
                     <a href="/Members/@member.MemberId/EditMember">Edit</a>
                     <a href="/Members/@member.MemberId/RemoveMember">Remove</a>
 

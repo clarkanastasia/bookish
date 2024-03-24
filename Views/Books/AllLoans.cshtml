@@ -10,9 +10,8 @@
         @{
             foreach (var loan in Model.Loans)
             {
-                <li>Borrower Id: @loan.MemberId</li>
                 <li>Borrower Name: @loan.Member.Name</li>
-                <li>Book Id: @loan.BookId</li>
+                <li>Membership Number: @loan.Member.MembershipNo</li>
                 <li>Book Title: @loan.Book.Title</li>
                 <li>Book Title: @loan.Book.Author</li>
                 <li>Issue Date: @loan.IssueDate</li>
