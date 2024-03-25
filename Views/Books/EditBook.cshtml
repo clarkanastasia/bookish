@@ -39,21 +39,5 @@
                 readonly
             />
             </label>
-        <button id="submitButton" type="submit" disabled>Update Book Info</button>
+        <button id="submitButton" type="submit">Update Book Info</button>
 </form>
-<script>
-
-function myFunction(totalCopies, availableCopies) {
-    var inputTotalCopies = document.getElementById("totalCopies").value;
-    var currentLoans = totalCopies-availableCopies;
-    
-    if(inputTotalCopies<currentLoans)
-    {
-        alert("Total Copies can't be less than " + currentLoans + "  for this book.")
-    }
-    else{
-        var button = document.getElementById("submitButton");
-        button.disabled = false;
-    }
-}
-</script>

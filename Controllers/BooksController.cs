@@ -2,7 +2,6 @@ using Bookish.Models.Data;
 using Bookish.Models.View;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 public class BooksController : Controller 
@@ -38,7 +37,6 @@ public class BooksController : Controller
 
     public IActionResult AddBook()
     {
-        return View();
         return View();
     }
 
@@ -128,7 +126,7 @@ public class BooksController : Controller
 
     [HttpPost("[controller]/{bookId}/Borrow")]
     public IActionResult BorrowBook([FromRoute] int bookId,[FromForm] int memberId)
-    {
+    {   
         var book = myLibrary.Books.FirstOrDefault(book => book.BookId == bookId);
             var newLoan = new Loan
             {
