@@ -79,13 +79,18 @@ namespace Bookish.Migrations
                 values: new object[,]
                 {
                     { -2, "Louisa May Alcott", 6, "Little Women", 6 },
-                    { -1, "J.K.Rowling", 5, "Harry Potter and The Goblet of Fire", 5 }
+                    { -1, "J.K.Rowling", 4, "Harry Potter and The Goblet of Fire", 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Members",
                 columns: new[] { "MemberId", "MembershipNo", "Name" },
                 values: new object[] { -1, "123456", "Jane Smith" });
+
+            migrationBuilder.InsertData(
+                table: "BooksOnLoan",
+                columns: new[] { "LoanId", "BookId", "DateReturned", "DueDate", "IssueDate", "MemberId" },
+                values: new object[] { -1, -1, null, new DateOnly(2024, 4, 24), new DateOnly(2024, 3, 25), -1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BooksOnLoan_BookId",

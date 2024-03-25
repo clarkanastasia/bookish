@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookish.Migrations
 {
     [DbContext(typeof(Library))]
-    [Migration("20240304143649_InitialCreate")]
+    [Migration("20240325131609_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Bookish.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Bookish.Models.Book", b =>
+            modelBuilder.Entity("Bookish.Models.Data.Book", b =>
                 {
                     b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace Bookish.Migrations
                         {
                             BookId = -1,
                             Author = "J.K.Rowling",
-                            AvailableCopies = 5,
+                            AvailableCopies = 4,
                             Title = "Harry Potter and The Goblet of Fire",
                             TotalCopies = 5
                         },
@@ -70,7 +70,7 @@ namespace Bookish.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Bookish.Models.Loan", b =>
+            modelBuilder.Entity("Bookish.Models.Data.Loan", b =>
                 {
                     b.Property<int>("LoanId")
                         .ValueGeneratedOnAdd()
@@ -100,9 +100,19 @@ namespace Bookish.Migrations
                     b.HasIndex("MemberId");
 
                     b.ToTable("BooksOnLoan");
+
+                    b.HasData(
+                        new
+                        {
+                            LoanId = -1,
+                            BookId = -1,
+                            DueDate = new DateOnly(2024, 4, 24),
+                            IssueDate = new DateOnly(2024, 3, 25),
+                            MemberId = -1
+                        });
                 });
 
-            modelBuilder.Entity("Bookish.Models.Member", b =>
+            modelBuilder.Entity("Bookish.Models.Data.Member", b =>
                 {
                     b.Property<int>("MemberId")
                         .ValueGeneratedOnAdd()
@@ -131,15 +141,15 @@ namespace Bookish.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Bookish.Models.Loan", b =>
+            modelBuilder.Entity("Bookish.Models.Data.Loan", b =>
                 {
-                    b.HasOne("Bookish.Models.Book", "Book")
+                    b.HasOne("Bookish.Models.Data.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bookish.Models.Member", "Member")
+                    b.HasOne("Bookish.Models.Data.Member", "Member")
                         .WithMany("Loans")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -150,7 +160,7 @@ namespace Bookish.Migrations
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("Bookish.Models.Member", b =>
+            modelBuilder.Entity("Bookish.Models.Data.Member", b =>
                 {
                     b.Navigation("Loans");
                 });
